@@ -27,7 +27,8 @@ if __name__ == '__main__':
                                   meta.PixelsPhysicalSizeY(0)]
         plt.imshow(read[0])
         plt.show()
-    print(zviDataFrame)
+    zviDataFrame.to_excel('/home/luca/PycharmProjects/pythonProject/dataframe.xlsx')
+    zviDataFrame.to_csv('/home/luca/PycharmProjects/pythonProject/dataframe.csv')
 
 
     # print(reader.metadata.PlaneExposureTime(0, 0))
