@@ -1,44 +1,42 @@
-#bibliotecas necesárias são pims, jpype1 e dar run uma vez no comando pims.bioformats.download_jar(version='6.5')
+# bibliotecas necesárias são pims, jpype1 e dar run uma vez no comando pims.bioformats.download_jar(version='6.5')
 
 
-#todo: ver a unidade de medida do pixelm size
-#todo: melhorar a leitura e armazenamento sequencial de .zvi's
-    #todo: ver como acessar a metadata em ReaderSequence
+# todo: ver a unidade de medida do pixelm size
+# todo: melhorar a leitura e armazenamento sequencial de .zvi's
+# todo: acessar a metadata em ReaderSequence
+import os
 
 import pims
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
+import cv2
+from PIL import Image
+import imageio
 
 
-
+def readConvertZVIFile(origin_folder, destination_folder):
+    columns = ["imgFileName", "PlaneExposureTime", "PixelsPhysicalSizeX", "PixelsPhysicalSizeY"]
+    zviDataFrame = pd.DataFrame(columns=columns)
+    cont = 1
+    for File in os.listdir(origin_folder):
+        fileName = f'convertedZVIImage{cont}.png'
+        os.chdir(destination_folder)
+        read = pims.bioformats.BioformatsReader(f'{origin_folder}/{File}', meta=True)
+        meta = read.metadata
+        readConverted = (read[0] * 255 / read[0].max()).clip(0, 255).astype(np.uint8)
+        zviDataFrame.loc[cont - 1] = [fileName,
+                                      meta.PlaneExposureTime(0, 0),
+                                      meta.PixelsPhysicalSizeX(0),
+                                      meta.PixelsPhysicalSizeY(0)]
+        cv2.imwrite(fileName, readConverted)
+        # Image.fromarray(readConverted).save('result.tiff')
+        # imageio.imwrite('result.png', readConverted)
+        plt.imshow(readConverted)
+        plt.show()
+    zviDataFrame.to_excel('./dataframe.xlsx')
+    zviDataFrame.to_csv('./dataframe.csv')
 
 
 if __name__ == '__main__':
-    columns = ["img", "PlaneExposureTime", "PixelsPhysicalSizeX", "PixelsPhysicalSizeY"]
-    zviDataFrame = pd.DataFrame(columns=columns)
-
-    for id in range(1, 6):
-        path = f'/home/luca/PycharmProjects/pythonProject/vziFiles/sampleFile{id}.zvi'
-        read = pims.bioformats.BioformatsReader(path, meta=True)
-        meta = read.metadata
-        zviDataFrame.loc[id-1] = [read[0],
-                                  meta.PlaneExposureTime(0, 0),
-                                  meta.PixelsPhysicalSizeX(0),
-                                  meta.PixelsPhysicalSizeY(0)]
-        plt.imshow(read[0])
-        plt.show()
-    zviDataFrame.to_excel('/home/luca/PycharmProjects/pythonProject/dataframe.xlsx')
-    zviDataFrame.to_csv('/home/luca/PycharmProjects/pythonProject/dataframe.csv')
-
-
-    # print(reader.metadata.PlaneExposureTime(0, 0))
-    # print(meta.PixelsPhysicalSizeX(0))
-    # print(meta.PixelsPhysicalSizeY(0))
-    # print(meta.PixelsPhysicalSizeZ(0))
-    # print(meta.LightPathEmissionFilterRefCount(0, 0))
-    # print(meta.LightSourceCount(0))
-    # print(meta.ImageDescription(0))
-    # print(meta.ImageName(0))
-    # print(meta.ImageInstrumentRef(0))
-    # print(meta.DetectorType(0, 0))
-
+    readConvertZVIFile("./vziFiles", "./test")
