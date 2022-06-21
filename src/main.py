@@ -1,6 +1,5 @@
 # bibliotecas necesárias são pims, jpype1 e dar run uma vez no comando pims.bioformats.download_jar(version='6.5')
 
-# todo: ver a unidade de medida do pixelm size
 
 import os
 import shutil
@@ -54,7 +53,6 @@ def read_convert_zvi_file(origin_folder, destination_folder, dataFrameName):
     zviDataFrame.to_csv(f'./{destination_folder}/{dataFrameName}.csv')
 
 
-# todo extender classe dataset
 
 if __name__ == '__main__':
     read_convert_zvi_file("/home/luca/Desktop/Uff/IC/Emulsões água em óleo", "./Filtered water on oil", "óleo em água")
