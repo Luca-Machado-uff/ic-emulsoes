@@ -1,17 +1,12 @@
 import os
-import torch
 import pandas as pd
-from skimage import io, transform
-import numpy as np
-import matplotlib.pyplot as plt
-from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms, utils
+from torch.utils.data import Dataset
+from torchvision import transforms
 import cv2
 
 
-class emulsionDataset(Dataset):
-    # todo: por none como valoe default de min_bubble_size
-    def __init__(self, file, root_dir, min_bubble_size):
+class EmulsionDataset(Dataset):
+    def __init__(self, file, root_dir, min_bubble_size=1, transform=None):
         if file.endswith(".xlsx"):
             self.sizes_frame = pd.read_excel(file)
         if file.endswith(".csv"):
@@ -34,5 +29,7 @@ class emulsionDataset(Dataset):
         meta_data = self.sizes_frame.iloc[idx, 2:5]
         sizes = self.sizes_frame.iloc[idx, 5:]
         sample = {'img': img, 'meta': meta_data, 'sizes': sizes}
+        if self.transform:
+            sample = self.transform(sample)
 
         return sample
