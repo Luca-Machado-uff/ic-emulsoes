@@ -8,18 +8,19 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
-
-
+import torch
+from waterOnOil import water_on_oil
 
 def install_jar_file():
     pims.bioformats.download_jar(version='6.5')
 
-# todo: colocar as imagens em pasta própria
+# todo: estudar pytorchlightning
+
 def read_convert_zvi_file(origin_folder, destination_folder, dataFrameName):
     columns = [
         "imgFileName", "PlaneExposureTime",
         "PixelsPhysicalSizeX", "PixelsPhysicalSizeY",
-      ]
+    ]
     zvi_dataframe = pd.DataFrame(columns=columns)
     if not os.path.isdir(destination_folder):
         os.mkdir(destination_folder)
@@ -60,9 +61,10 @@ def read_convert_zvi_file(origin_folder, destination_folder, dataFrameName):
     zvi_dataframe.to_excel(f'./{destination_folder}/{dataFrameName}.xlsx')
     zvi_dataframe.to_csv(f'./{destination_folder}/{dataFrameName}.csv')
 
+    # read_convert_zvi_file("/home/luca/Desktop/Uff/IC/Emulsões água em óleo",
+    #                       "./Filtered water on oil", "óleo em água")
+    # read_convert_zvi_file("/home/luca/Desktop/Uff/IC/Emulsões óleo em água",
+    #                       "./Filtered oil on water", "água em óleo")
 
 if __name__ == '__main__':
-    read_convert_zvi_file("/home/luca/Desktop/Uff/IC/Emulsões água em óleo",
-                          "./Filtered water on oil", "óleo em água")
-    read_convert_zvi_file("/home/luca/Desktop/Uff/IC/Emulsões óleo em água",
-                          "./Filtered oil on water", "água em óleo")
+    water_on_oil.water_on_oil()

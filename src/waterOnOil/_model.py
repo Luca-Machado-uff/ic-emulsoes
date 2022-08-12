@@ -6,9 +6,9 @@ import torch.nn.functional as f
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-class waterOnOilVGG16(nn.Module):
+class WaterOnOilVGG16(nn.Module):
     def __init__(self, n_classes):
-        super(waterOnOilVGG16, self).__init__()
+        super(WaterOnOilVGG16, self).__init__()
         # conv layers: (in_channel size, out_channels size, kernel_size, stride, padding)
         self.conv1_1 = nn.Conv2d(3, 64, kernel_size=3, padding=1)
         self.conv1_2 = nn.Conv2d(64, 64, kernel_size=3, padding=1)
