@@ -5,8 +5,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 import cv2
 
-#todo tirar o pandas da mesma pasta das imgs???
-#todo uniformizar o tamanho dos tensores
+
 class EmulsionDataset(Dataset):
     def __init__(self, file, root_dir, min_bubble_size=1, transform=None):
         if file.endswith(".xlsx"):
@@ -33,13 +32,5 @@ class EmulsionDataset(Dataset):
         meta_data = np.asarray(meta_data)
         if self.transform:
             img = self.transform(img)
-        sample = {'img': img, 'meta': meta_data, 'sizes': sizes}
 
-
-        # jeito que estava no tutorial
-        # sample = {'img': img, 'meta': meta_data, 'sizes': sizes}
-        #
-        # if self.transform:
-        #     sample = self.transform(sample)
-
-        return sample
+        return {'img': img, 'meta': meta_data, 'sizes': sizes}
