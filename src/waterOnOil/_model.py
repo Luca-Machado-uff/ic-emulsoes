@@ -32,9 +32,9 @@ class WaterOnOilVGG16(nn.Module):
         self.pool = nn.MaxPool2d(2, 2)
 
         # fully conected layers:
-        self.fc6 = nn.Linear(7*7*512, 4096)
+        self.fc6 = nn.Linear(33*34*512, 4096)
         self.fc7 = nn.Linear(4096, 4096)
-        self.fc8 = nn.Linear(4096, 1000)
+        self.fc8 = nn.Linear(4096, n_classes)
 
     def forward(self, x, training=True):
         x = f.relu(self.conv1_1(x))
@@ -55,7 +55,7 @@ class WaterOnOilVGG16(nn.Module):
         x = f.relu(self.conv5_2(x))
         x = f.relu(self.conv5_3(x))
         x = self.pool(x)
-        x = x.view(-1, 7 * 7 * 512)
+        x = x.view(-1, 33 * 34 * 512)
         x = f.relu(self.fc6(x))
         x = f.dropout(x, 0.5, training=training)
         x = f.relu(self.fc7(x))

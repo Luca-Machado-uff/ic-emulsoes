@@ -17,7 +17,7 @@ def water_on_oil():
 
     dataset_train, dataset_test = random_split(dataset, [9, 2])
 
-    train_loader = utils.data.DataLoader(dataset_train, batch_size=batch_size, shuffle=False)
+    train_loader = utils.data.DataLoader(dataset_train, batch_size=batch_size, shuffle=False, drop_last=True)
     test_loader = utils.data.DataLoader(dataset_test, batch_size=batch_size, shuffle=False)
 
     network = WaterOnOilVGG16(41)
@@ -27,7 +27,7 @@ def water_on_oil():
 
     for epoch in range(10):
 
-        for i, data in enumerate(train_loader, 0):
+        for data in train_loader:
             img, metadata, labels = data
             optimizer.zero_grad()
             outputs = network(img)
